@@ -1,0 +1,5 @@
+{
+  "name": "Price Pal",
+  "description": "An interactive web application that allows users to add items to a cart and instantly compare prices, delivery dates, and ratings across various online shopping sites using the power of the Gemini API.",
+  "requestFramePermissions": []
+}
