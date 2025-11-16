@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 
 interface ItemInputFormProps {
@@ -25,13 +24,13 @@ const ItemInputForm: React.FC<ItemInputFormProps> = ({ onAddItem }) => {
         value={itemName}
         onChange={(e) => setItemName(e.target.value)}
         placeholder="e.g., Sony WH-1000XM5 Headphones"
-        className="flex-grow w-full px-4 py-3 bg-slate-100 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-offset-dark"
+        className="flex-grow w-full px-4 py-3 bg-neutral-200 dark:bg-neutral-700 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-offset-dark"
         disabled={isLoading}
       />
       <button
         type="submit"
         disabled={isLoading || !itemName.trim()}
-        className="px-6 py-3 bg-primary text-white font-semibold rounded-lg shadow-md hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:focus:ring-offset-dark disabled:bg-slate-400 dark:disabled:bg-slate-600 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center group-hover:scale-105 disabled:group-hover:scale-100"
+        className="px-6 py-3 bg-primary text-white font-semibold rounded-lg shadow-md hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:focus:ring-offset-dark disabled:bg-neutral-400 dark:disabled:bg-neutral-600 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center group-hover:scale-105 disabled:group-hover:scale-100"
       >
         {isLoading ? (
           <>

@@ -28,8 +28,8 @@ const LiveDateTime: React.FC = () => {
 
     return (
         <div className="hidden sm:block text-right">
-            <p className="text-sm font-medium text-slate-700 dark:text-slate-300">{formattedDate}</p>
-            <p className="text-xs text-slate-500 dark:text-slate-400">{formattedTime}</p>
+            <p className="text-sm font-medium text-neutral-700 dark:text-neutral-300">{formattedDate}</p>
+            <p className="text-xs text-neutral-500 dark:text-neutral-400">{formattedTime}</p>
         </div>
     );
 };
@@ -37,11 +37,11 @@ const LiveDateTime: React.FC = () => {
 
 const Header: React.FC = () => {
   return (
-    <header className="bg-white dark:bg-slate-800 shadow-md animate-slide-down-fade">
+    <header className="bg-neutral-100 dark:bg-neutral-800 shadow-md animate-slide-down-fade">
       <div className="container mx-auto px-4 md:px-8 py-4 flex justify-between items-center">
         <div className="flex items-center space-x-3">
           <ShoppingCartIcon />
-          <h1 className="text-2xl md:text-3xl font-bold text-slate-800 dark:text-white tracking-tight">
+          <h1 className="text-2xl md:text-3xl font-bold text-neutral-800 dark:text-neutral-100 tracking-tight">
             Price Pal
           </h1>
         </div>
