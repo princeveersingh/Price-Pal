@@ -20,3 +20,9 @@ export interface CartItemData {
   error: string | null;
   priceAlert?: number | null;
 }
+
+export interface ChatMessage {
+  id: string;
+  text: string;
+  sender: 'user' | 'bot';
+}

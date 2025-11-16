@@ -1,7 +1,50 @@
-import { GoogleGenAI, Type } from "@google/genai";
-import type { ComparisonData } from '../types';
+import { GoogleGenAI, Type, Chat } from "@google/genai";
+import type { ComparisonData, CartItemData } from '../types';
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+
+// --- Chatbot Logic ---
+let chat: Chat | null = null;
+
+function getCartContext(cartItems: CartItemData[]): string {
+    if (cartItems.length === 0) {
+        return "The user's shopping cart is currently empty.";
+    }
+    const itemDescriptions = cartItems.map(item => {
+        let description = `- ${item.name}`;
+        if (item.comparisons && item.comparisons.bestRetailer && item.comparisons.comparisons) {
+            const bestDeal = item.comparisons.comparisons.find(c => c.retailer === item.comparisons.bestRetailer);
+            if (bestDeal) {
+              description += ` (Best price found: ${new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(bestDeal.price)} at ${item.comparisons.bestRetailer})`;
+            }
+        }
+        return description;
+    }).join('\n');
+    return `Here is the current state of the user's shopping cart:\n${itemDescriptions}`;
+}
+
+export const getChatbotResponse = async (message: string, cartItems: CartItemData[]): Promise<string> => {
+    if (!chat) {
+        chat = ai.chats.create({
+            model: 'gemini-2.5-flash',
+            config: {
+                systemInstruction: `You are 'Price Pal Assistant', a friendly and expert shopping companion. Your goal is to provide personalized assistance to users, helping them find the best products, compare deals, and make informed purchasing decisions. Be helpful, concise, and engaging. Never refuse to answer a question. When relevant, you can use the user's current shopping cart to provide more tailored advice.`,
+            },
+        });
+    }
+
+    const cartContext = getCartContext(cartItems);
+    const fullPrompt = `${cartContext}\n\nUser's question: "${message}"`;
+
+    try {
+        const response = await chat.sendMessage({ message: fullPrompt });
+        return response.text;
+    } catch (error) {
+        console.error("Error fetching from Gemini Chat API:", error);
+        return "I'm sorry, I'm having a little trouble connecting right now. Please try again in a moment.";
+    }
+};
+
 
 export const fetchProductComparisons = async (productName: string): Promise<ComparisonData> => {
   const today = new Date();

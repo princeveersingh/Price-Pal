@@ -5,9 +5,13 @@ import Header from './components/Header';
 import ItemInputForm from './components/ItemInputForm';
 import Cart from './components/Cart';
 import { v4 as uuidv4 } from 'uuid';
+import ChatbotButton from './components/ChatbotButton';
+import Chatbot from './components/Chatbot';
 
 const App: React.FC = () => {
   const [cartItems, setCartItems] = useState<CartItemData[]>([]);
+  const [isChatbotOpen, setIsChatbotOpen] = useState(false);
+
 
   // Fix: Extracted fetch logic into a reusable function to fix retry bug and improve clarity.
   const fetchAndSetComparisons = useCallback(async (itemId: string, itemName:string) => {
@@ -99,6 +103,12 @@ const App: React.FC = () => {
           />
         </div>
       </main>
+      <ChatbotButton onClick={() => setIsChatbotOpen(true)} />
+      <Chatbot
+        isOpen={isChatbotOpen}
+        onClose={() => setIsChatbotOpen(false)}
+        cartItems={cartItems}
+      />
     </div>
   );
 };
