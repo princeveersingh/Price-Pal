@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import LocationEditor from './LocationEditor';
 
 const ShoppingCartIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -34,8 +35,12 @@ const LiveDateTime: React.FC = () => {
     );
 };
 
+interface HeaderProps {
+    location: string;
+    onLocationChange: (newLocation: string) => void;
+}
 
-const Header: React.FC = () => {
+const Header: React.FC<HeaderProps> = ({ location, onLocationChange }) => {
   return (
     <header className="bg-neutral-100 dark:bg-neutral-800 shadow-md animate-slide-down-fade">
       <div className="container mx-auto px-4 md:px-8 py-4 flex justify-between items-center">
@@ -45,7 +50,10 @@ const Header: React.FC = () => {
             Price Pal
           </h1>
         </div>
-        <LiveDateTime />
+        <div className="flex items-center space-x-4">
+            <LocationEditor location={location} onLocationChange={onLocationChange} />
+            <LiveDateTime />
+        </div>
       </div>
     </header>
   );

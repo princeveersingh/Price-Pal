@@ -46,7 +46,7 @@ export const getChatbotResponse = async (message: string, cartItems: CartItemDat
 };
 
 
-export const fetchProductComparisons = async (productName: string): Promise<ComparisonData> => {
+export const fetchProductComparisons = async (productName: string, location: string): Promise<ComparisonData> => {
   const today = new Date();
   const currentDateFormatted = today.toLocaleDateString('en-US', {
     month: 'long',
@@ -81,7 +81,7 @@ export const fetchProductComparisons = async (productName: string): Promise<Comp
             },
             deliveryDate: {
               type: Type.STRING,
-              description: `Estimated delivery date for a delivery to New Delhi. The current date is ${currentDateFormatted}. The delivery date MUST be on or after this date. Use a clear, future-facing format like 'Tomorrow', 'In 2 days', or 'Month Day, Year'. Any specific date provided must be in the future. DO NOT use dates from the past.`
+              description: `Estimated delivery date for a delivery to ${location}. The current date is ${currentDateFormatted}. The delivery date MUST be on or after this date. Use a clear, future-facing format like 'Tomorrow', 'In 2 days', or 'Month Day, Year'. Any specific date provided must be in the future. DO NOT use dates from the past.`
             },
             rating: {
               type: Type.NUMBER,
@@ -101,7 +101,7 @@ export const fetchProductComparisons = async (productName: string): Promise<Comp
 
 
   try {
-    const prompt = `You are an expert shopping assistant. The current date is ${currentDateFormatted}. Find and compare the price, estimated delivery date, and user rating for the product "${productName}" for a user in New Delhi, India. Search on at least 3 major Indian online retailers (like Amazon.in, Flipkart, Myntra, etc.).
+    const prompt = `You are an expert shopping assistant. The current date is ${currentDateFormatted}. Find and compare the price, estimated delivery date, and user rating for the product "${productName}" for a user in ${location}. Search on at least 3 major Indian online retailers (like Amazon.in, Flipkart, Myntra, etc.).
     
     After gathering the data, analyze it and determine the single best deal. The best deal should primarily be the lowest price, but consider significantly faster delivery or a much higher rating as important factors.
     

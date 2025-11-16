@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import type { CartItemData } from './types';
 import { fetchProductComparisons } from './services/geminiService';
 import Header from './components/Header';
@@ -11,12 +11,21 @@ import Chatbot from './components/Chatbot';
 const App: React.FC = () => {
   const [cartItems, setCartItems] = useState<CartItemData[]>([]);
   const [isChatbotOpen, setIsChatbotOpen] = useState(false);
+  const [location, setLocation] = useState<string>(() => localStorage.getItem('userLocation') || 'New Delhi, India');
 
+  useEffect(() => {
+    localStorage.setItem('userLocation', location);
+  }, [location]);
 
-  // Fix: Extracted fetch logic into a reusable function to fix retry bug and improve clarity.
-  const fetchAndSetComparisons = useCallback(async (itemId: string, itemName:string) => {
+  const handleLocationChange = (newLocation: string) => {
+    setLocation(newLocation);
+    // Note: We are not refetching existing items on location change to avoid excessive API calls.
+    // The new location will be used for any new items added or retried.
+  };
+
+  const fetchAndSetComparisons = useCallback(async (itemId: string, itemName: string, loc: string) => {
     try {
-      const comparisons = await fetchProductComparisons(itemName);
+      const comparisons = await fetchProductComparisons(itemName, loc);
       setCartItems(prevItems =>
         prevItems.map(item =>
           item.id === itemId
@@ -49,8 +58,8 @@ const App: React.FC = () => {
     };
 
     setCartItems(prevItems => [newItem, ...prevItems]);
-    await fetchAndSetComparisons(newItem.id, newItem.name);
-  }, [fetchAndSetComparisons]);
+    await fetchAndSetComparisons(newItem.id, newItem.name, location);
+  }, [fetchAndSetComparisons, location]);
   
   const handleRemoveItem = useCallback((id: string) => {
     setCartItems(prevItems => prevItems.filter(item => item.id !== id));
@@ -64,8 +73,8 @@ const App: React.FC = () => {
             : item
         )
       );
-      fetchAndSetComparisons(id, name);
-  }, [fetchAndSetComparisons]);
+      fetchAndSetComparisons(id, name, location);
+  }, [fetchAndSetComparisons, location]);
 
   const handleSetPriceAlert = useCallback((id: string, price: number) => {
     setCartItems(prevItems =>
@@ -98,7 +107,7 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen font-sans">
-      <Header />
+      <Header location={location} onLocationChange={handleLocationChange} />
       <main className="container mx-auto p-4 md:p-8 max-w-4xl">
         <div className="bg-neutral-100 dark:bg-neutral-800 p-6 rounded-xl shadow-lg mb-8 animate-slide-in-up" style={{ animationDelay: '100ms', opacity: 0 }}>
             <h2 className="text-2xl font-bold text-neutral-800 dark:text-neutral-100 mb-4">Add a Product to Compare</h2>
